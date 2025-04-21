@@ -12,51 +12,51 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: '2rem',
+      padding: "2rem",
       screens: {
-        '2xl': '1400px'
-      }
+        "2xl": "1400px",
+      },
     },
     extend: {
       colors: {
-        border: 'hsl(145, 50%, 15%)', // Dark green border
-        input: 'hsl(145, 50%, 20%)', // Slightly lighter input
-        ring: 'hsl(145, 50%, 25%)', // Ring color
-        background: 'hsl(145, 50%, 10%)', // Very dark green background
-        foreground: 'hsl(145, 10%, 95%)', // Light text for contrast
+        border: "#1C1C1C", // Dark charcoal border
+        input: "#2C2C2C", // Slightly lighter input
+        ring: "#FFD700", // Gold ring
+        background: "#000000", // Pure black background
+        foreground: "#FFD700", // Gold text
         primary: {
-          DEFAULT: 'hsl(145, 50%, 30%)', // Medium dark green
-          foreground: 'hsl(145, 10%, 95%)'
+          DEFAULT: "#FFD700", // Gold primary
+          foreground: "#000000" // Black text on gold background
         },
         secondary: {
-          DEFAULT: 'hsl(145, 50%, 20%)', // Darker green
-          foreground: 'hsl(145, 10%, 95%)'
+          DEFAULT: "#1C1C1C", // Dark charcoal secondary
+          foreground: "#FFD700" // Gold text on secondary
         },
         destructive: {
-          DEFAULT: 'hsl(0, 84.2%, 60.2%)', // Keep destructive red
-          foreground: 'hsl(0, 0%, 98%)'
+          DEFAULT: "#FF4500", // Orangered for destructive actions
+          foreground: "#FFFFFF"
         },
         muted: {
-          DEFAULT: 'hsl(145, 50%, 15%)', // Muted dark green
-          foreground: 'hsl(145, 10%, 70%)' // Muted text
+          DEFAULT: "#2C2C2C", // Muted dark gray
+          foreground: "#A9A9A9" // Dim gray text
         },
         accent: {
-          DEFAULT: 'hsl(145, 50%, 25%)', // Accent green
-          foreground: 'hsl(145, 10%, 95%)'
+          DEFAULT: "#FFD700", // Gold accent
+          foreground: "#000000"
         },
         popover: {
-          DEFAULT: 'hsl(145, 50%, 15%)', // Popover background
-          foreground: 'hsl(145, 10%, 95%)'
+          DEFAULT: "#1C1C1C", // Dark popover
+          foreground: "#FFD700"
         },
         card: {
-          DEFAULT: 'hsl(145, 50%, 15%)', // Card background
-          foreground: 'hsl(145, 10%, 95%)' // Card text
+          DEFAULT: "#1C1C1C", // Dark card
+          foreground: "#FFD700"
         }
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)'
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
         'accordion-down': {
