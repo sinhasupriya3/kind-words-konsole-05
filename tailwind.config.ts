@@ -19,38 +19,38 @@ export default {
     },
     extend: {
       colors: {
-        border: "#1C1C1C", // Dark charcoal border
-        input: "#2C2C2C", // Slightly lighter input
-        ring: "#FFD700", // Gold ring
-        background: "#000000", // Pure black background
-        foreground: "#FFD700", // Gold text
+        border: "#2C2C2C",
+        input: "#3C3C3C",
+        ring: "#9b87f5",
+        background: "#000000",
+        foreground: "#9b87f5",
         primary: {
-          DEFAULT: "#FFD700", // Gold primary
-          foreground: "#000000" // Black text on gold background
+          DEFAULT: "#9b87f5",
+          foreground: "#000000"
         },
         secondary: {
-          DEFAULT: "#1C1C1C", // Dark charcoal secondary
-          foreground: "#FFD700" // Gold text on secondary
+          DEFAULT: "#2C2C2C",
+          foreground: "#9b87f5"
         },
         destructive: {
-          DEFAULT: "#FF4500", // Orangered for destructive actions
+          DEFAULT: "#FF4500",
           foreground: "#FFFFFF"
         },
         muted: {
-          DEFAULT: "#2C2C2C", // Muted dark gray
-          foreground: "#A9A9A9" // Dim gray text
+          DEFAULT: "#2C2C2C",
+          foreground: "#6E59A5"
         },
         accent: {
-          DEFAULT: "#FFD700", // Gold accent
+          DEFAULT: "#7E69AB",
           foreground: "#000000"
         },
         popover: {
-          DEFAULT: "#1C1C1C", // Dark popover
-          foreground: "#FFD700"
+          DEFAULT: "#1C1C1C",
+          foreground: "#9b87f5"
         },
         card: {
-          DEFAULT: "#1C1C1C", // Dark card
-          foreground: "#FFD700"
+          DEFAULT: "#1C1C1C",
+          foreground: "#9b87f5"
         }
       },
       borderRadius: {
