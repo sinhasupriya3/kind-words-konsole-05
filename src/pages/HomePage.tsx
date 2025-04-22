@@ -3,41 +3,11 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MainLayout from "@/components/layout/MainLayout";
-import EventCard, { Event } from "@/components/events/EventCard";
+import EventCard from "@/components/events/EventCard";
+import { mockEvents } from "@/data/mockEvents";
 
-// Sample data - will be replaced with fetched data
-const featuredEvents: Event[] = [
-  {
-    id: "1",
-    title: "Tech Conference 2025",
-    description: "Join us for the biggest tech conference of the year featuring the latest innovations and industry leaders.",
-    date: "2025-06-15",
-    time: "09:00 AM - 05:00 PM",
-    location: "Convention Center, San Francisco",
-    category: "Technology",
-    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
-  },
-  {
-    id: "2",
-    title: "Web Development Workshop",
-    description: "A hands-on workshop for learning modern web development techniques and tools.",
-    date: "2025-07-10",
-    time: "10:00 AM - 03:00 PM",
-    location: "Digital Academy, New York",
-    category: "Workshop",
-    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
-  },
-  {
-    id: "3",
-    title: "Startup Networking Event",
-    description: "Connect with founders, investors, and tech enthusiasts in this networking event.",
-    date: "2025-05-20",
-    time: "06:00 PM - 09:00 PM",
-    location: "Innovation Hub, Seattle",
-    category: "Networking",
-    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
-  },
-];
+// Get the first 3 events as featured events
+const featuredEvents = mockEvents.slice(0, 3);
 
 const HomePage = () => {
   return (
@@ -69,7 +39,7 @@ const HomePage = () => {
       </section>
 
       {/* Featured Events Section */}
-      <section className="py-12 bg-accent/30">
+      <section className="py-12 bg-accent/10 rounded-lg">
         <div className="container px-4 mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
             <div>
@@ -100,7 +70,7 @@ const HomePage = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-card border border-border p-6 rounded-lg">
+            <div className="bg-card border border-border p-6 rounded-lg shadow-sm">
               <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                 <svg 
                   xmlns="http://www.w3.org/2000/svg" 
@@ -124,7 +94,7 @@ const HomePage = () => {
               </p>
             </div>
             
-            <div className="bg-card border border-border p-6 rounded-lg">
+            <div className="bg-card border border-border p-6 rounded-lg shadow-sm">
               <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                 <svg 
                   xmlns="http://www.w3.org/2000/svg" 
@@ -154,7 +124,7 @@ const HomePage = () => {
               </p>
             </div>
             
-            <div className="bg-card border border-border p-6 rounded-lg">
+            <div className="bg-card border border-border p-6 rounded-lg shadow-sm">
               <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                 <svg 
                   xmlns="http://www.w3.org/2000/svg" 
@@ -170,9 +140,9 @@ const HomePage = () => {
                   <path d="m15 5 4 4" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Personalized Experience</h3>
+              <h3 className="text-xl font-semibold mb-2">Secure Payments</h3>
               <p className="text-muted-foreground">
-                Discover events tailored to your interests and preferences
+                Purchase tickets with our safe and reliable payment system
               </p>
             </div>
           </div>
@@ -180,14 +150,14 @@ const HomePage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 md:py-20 bg-primary text-primary-foreground">
+      <section className="py-12 md:py-20 bg-primary/10 rounded-lg">
         <div className="container px-4 mx-auto text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to get started?</h2>
           <p className="mb-8 max-w-2xl mx-auto">
             Create your account now and start discovering amazing events around you.
           </p>
           <Link to="/signup">
-            <Button size="lg" variant="secondary">
+            <Button size="lg">
               Create Free Account
             </Button>
           </Link>

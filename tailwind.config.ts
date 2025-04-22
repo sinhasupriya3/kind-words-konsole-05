@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -19,38 +20,38 @@ export default {
     },
     extend: {
       colors: {
-        border: "#2C2C2C",
-        input: "#3C3C3C",
-        ring: "#9b87f5",
-        background: "#000000",
-        foreground: "#9b87f5",
+        border: "#e9ecef",
+        input: "#f1f3f5",
+        ring: "#A5B4FC",
+        background: "#ffffff",
+        foreground: "#4B5563",
         primary: {
-          DEFAULT: "#9b87f5",
-          foreground: "#000000"
+          DEFAULT: "#A5B4FC",
+          foreground: "#1F2937"
         },
         secondary: {
-          DEFAULT: "#2C2C2C",
-          foreground: "#9b87f5"
+          DEFAULT: "#F3F4F6",
+          foreground: "#4B5563"
         },
         destructive: {
-          DEFAULT: "#FF4500",
-          foreground: "#FFFFFF"
+          DEFAULT: "#FCA5A5",
+          foreground: "#7F1D1D"
         },
         muted: {
-          DEFAULT: "#2C2C2C",
-          foreground: "#6E59A5"
+          DEFAULT: "#F3F4F6",
+          foreground: "#6B7280"
         },
         accent: {
-          DEFAULT: "#7E69AB",
-          foreground: "#000000"
+          DEFAULT: "#FDE68A",
+          foreground: "#78350F"
         },
         popover: {
-          DEFAULT: "#1C1C1C",
-          foreground: "#9b87f5"
+          DEFAULT: "#FFFFFF",
+          foreground: "#4B5563"
         },
         card: {
-          DEFAULT: "#1C1C1C",
-          foreground: "#9b87f5"
+          DEFAULT: "#FFFFFF",
+          foreground: "#4B5563"
         }
       },
       borderRadius: {

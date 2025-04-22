@@ -6,6 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
 import { Event } from "./EventCard";
+import PaymentModal from "./PaymentModal";
+import { Ticket } from "lucide-react";
 
 interface EventRegistrationFormProps {
   event: Event;
@@ -19,7 +21,8 @@ export interface AttendeeDetails {
 }
 
 const EventRegistrationForm = ({ event, onRegister }: EventRegistrationFormProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [attendeeDetails, setAttendeeDetails] = useState<AttendeeDetails>({
     name: "",
@@ -46,12 +49,8 @@ const EventRegistrationForm = ({ event, onRegister }: EventRegistrationFormProps
     
     setIsLoading(true);
     try {
-      await onRegister(event.id, attendeeDetails);
-      setIsOpen(false);
-      toast({
-        title: "Registration Successful",
-        description: `You have successfully registered for ${event.title}`,
-      });
+      setIsRegistrationOpen(false);
+      setIsPaymentOpen(true);
     } catch (error) {
       console.error("Registration error:", error);
       toast({
@@ -64,68 +63,91 @@ const EventRegistrationForm = ({ event, onRegister }: EventRegistrationFormProps
     }
   };
   
+  const handlePaymentSuccess = async () => {
+    try {
+      await onRegister(event.id, attendeeDetails);
+      toast({
+        title: "Registration Successful",
+        description: `You have successfully registered for ${event.title}`,
+      });
+    } catch (error) {
+      console.error("Error finalizing registration:", error);
+    }
+  };
+  
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button className="w-full">Register for Event</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <form onSubmit={handleSubmit}>
-          <DialogHeader>
-            <DialogTitle>Register for {event.title}</DialogTitle>
-            <DialogDescription>
-              Please fill in your details to register for this event.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
-                Name <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="name"
-                name="name"
-                value={attendeeDetails.name}
-                onChange={handleChange}
-                className="col-span-3"
-                required
-              />
+    <>
+      <Button onClick={() => setIsRegistrationOpen(true)} className="w-full">
+        <Ticket className="mr-2 h-4 w-4" />
+        Register for Event
+      </Button>
+      
+      <Dialog open={isRegistrationOpen} onOpenChange={setIsRegistrationOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <form onSubmit={handleSubmit}>
+            <DialogHeader>
+              <DialogTitle>Register for {event.title}</DialogTitle>
+              <DialogDescription>
+                Please fill in your details to register for this event.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="name" className="text-right">
+                  Name <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="name"
+                  name="name"
+                  value={attendeeDetails.name}
+                  onChange={handleChange}
+                  className="col-span-3"
+                  required
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="email" className="text-right">
+                  Email <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={attendeeDetails.email}
+                  onChange={handleChange}
+                  className="col-span-3"
+                  required
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="phone" className="text-right">
+                  Phone
+                </Label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  value={attendeeDetails.phone}
+                  onChange={handleChange}
+                  className="col-span-3"
+                />
+              </div>
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="email" className="text-right">
-                Email <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={attendeeDetails.email}
-                onChange={handleChange}
-                className="col-span-3"
-                required
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="phone" className="text-right">
-                Phone
-              </Label>
-              <Input
-                id="phone"
-                name="phone"
-                value={attendeeDetails.phone}
-                onChange={handleChange}
-                className="col-span-3"
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Registering..." : "Complete Registration"}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+            <DialogFooter>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? "Processing..." : "Continue to Payment"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+      
+      <PaymentModal
+        event={event}
+        isOpen={isPaymentOpen}
+        onClose={() => setIsPaymentOpen(false)}
+        onSuccess={handlePaymentSuccess}
+      />
+    </>
   );
 };
 
