@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Search } from "lucide-react";
@@ -20,6 +19,8 @@ const registeredEvents: Event[] = [
     location: "Convention Center, San Francisco",
     category: "Technology",
     image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+    totalSeats: 500,
+    enrolledSeats: 380,
     isRegistered: true,
   },
   {
@@ -31,6 +32,8 @@ const registeredEvents: Event[] = [
     location: "Innovation Hub, Seattle",
     category: "Networking",
     image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
+    totalSeats: 200,
+    enrolledSeats: 150,
     isRegistered: true,
   },
 ];
@@ -45,6 +48,8 @@ const searchedEvents: Event[] = [
     location: "Digital Academy, New York",
     category: "Workshop",
     image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
+    totalSeats: 100,
+    enrolledSeats: 85,
   },
   {
     id: "5",
@@ -55,6 +60,8 @@ const searchedEvents: Event[] = [
     location: "Design Studio, San Diego",
     category: "Workshop",
     image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158",
+    totalSeats: 150,
+    enrolledSeats: 120,
   },
 ];
 
