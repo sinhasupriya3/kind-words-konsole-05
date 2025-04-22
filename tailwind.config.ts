@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -20,38 +19,38 @@ export default {
     },
     extend: {
       colors: {
-        border: "#e9ecef",
-        input: "#f1f3f5",
-        ring: "#A5B4FC",
-        background: "#ffffff",
-        foreground: "#4B5563",
+        border: "#e0d5e8",
+        input: "#f1e3ff",
+        ring: "#B288F5",
+        background: "#FCF5FF",
+        foreground: "#4B3B63",
         primary: {
-          DEFAULT: "#A5B4FC",
-          foreground: "#1F2937"
+          DEFAULT: "#B288F5",
+          foreground: "#1F1729"
         },
         secondary: {
-          DEFAULT: "#F3F4F6",
-          foreground: "#4B5563"
+          DEFAULT: "#FFE3B3",
+          foreground: "#4B3B63"
         },
         destructive: {
           DEFAULT: "#FCA5A5",
           foreground: "#7F1D1D"
         },
         muted: {
-          DEFAULT: "#F3F4F6",
-          foreground: "#6B7280"
+          DEFAULT: "#EEE3FF",
+          foreground: "#6B5A80"
         },
         accent: {
-          DEFAULT: "#FDE68A",
+          DEFAULT: "#FFD166",
           foreground: "#78350F"
         },
         popover: {
           DEFAULT: "#FFFFFF",
-          foreground: "#4B5563"
+          foreground: "#4B3B63"
         },
         card: {
           DEFAULT: "#FFFFFF",
-          foreground: "#4B5563"
+          foreground: "#4B3B63"
         }
       },
       borderRadius: {
@@ -80,6 +79,11 @@ export default {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out'
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'hero-pattern': 'linear-gradient(135deg, rgba(245,247,250,0.8) 0%, rgba(231,218,255,0.8) 100%)',
       }
     }
   },

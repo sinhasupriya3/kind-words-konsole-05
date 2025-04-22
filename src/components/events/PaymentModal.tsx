@@ -12,7 +12,7 @@ import {
   DialogTitle 
 } from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
-import { CreditCard, CalendarDays, Lock } from "lucide-react";
+import { CreditCard, CalendarDays, Lock, Phone, Mail, Ticket } from "lucide-react";
 import { Event } from "./EventCard";
 
 interface PaymentModalProps {
@@ -23,21 +23,19 @@ interface PaymentModalProps {
 }
 
 interface PaymentDetails {
-  cardNumber: string;
-  cardholderName: string;
-  expiryDate: string;
-  cvv: string;
+  name: string;
+  email: string;
+  phone: string;
   quantity: number;
 }
 
 const PaymentModal = ({ event, isOpen, onClose, onSuccess }: PaymentModalProps) => {
-  const baseTicketPrice = 49.99;
+  const [step, setStep] = useState<"details" | "payment">("details");
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentDetails, setPaymentDetails] = useState<PaymentDetails>({
-    cardNumber: "",
-    cardholderName: "",
-    expiryDate: "",
-    cvv: "",
+    name: "",
+    email: "",
+    phone: "",
     quantity: 1,
   });
   
@@ -54,32 +52,96 @@ const PaymentModal = ({ event, isOpen, onClose, onSuccess }: PaymentModalProps) 
   };
   
   const calculateTotal = () => {
-    return (baseTicketPrice * paymentDetails.quantity).toFixed(2);
+    const basePrice = event.ticketPrice || 49.99;
+    return (basePrice * paymentDetails.quantity).toFixed(2);
   };
   
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmitDetails = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!paymentDetails.cardNumber || 
-        !paymentDetails.cardholderName || 
-        !paymentDetails.expiryDate || 
-        !paymentDetails.cvv) {
+    if (!paymentDetails.name || !paymentDetails.email || !paymentDetails.phone) {
       toast({
         title: "Missing Information",
-        description: "Please fill all the required payment fields",
+        description: "Please fill all the required fields",
         variant: "destructive",
       });
       return;
     }
     
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(paymentDetails.email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Validate phone format (Indian phone number)
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phoneRegex.test(paymentDetails.phone)) {
+      toast({
+        title: "Invalid Phone Number",
+        description: "Please enter a valid 10-digit Indian phone number",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setStep("payment");
+  };
+  
+  const handlePayment = async () => {
     setIsProcessing(true);
-    // Simulate payment processing
+    
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // This would be a real Razorpay integration in production
+      // Simulate API call to create Razorpay order
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // In a real app, this would come from your backend
+      const orderId = 'order_' + Math.random().toString(36).substring(2, 15);
+      const totalAmount = parseFloat(calculateTotal()) * 100; // Convert to paise
+      
+      const options = {
+        key: "rzp_test_yourkeyhere", // Replace with your actual Razorpay key
+        amount: totalAmount,
+        currency: "INR",
+        name: "Event Ticket",
+        description: `Tickets for ${event.title}`,
+        order_id: orderId,
+        handler: function() {
+          handlePaymentSuccess();
+        },
+        prefill: {
+          name: paymentDetails.name,
+          email: paymentDetails.email,
+          contact: paymentDetails.phone
+        },
+        notes: {
+          event_id: event.id,
+          quantity: paymentDetails.quantity
+        },
+        theme: {
+          color: "#B288F5"
+        }
+      };
+      
+      // In a real app, we would load the Razorpay script and open the payment window
+      // Simulating payment success for the demo
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Send notification email and SMS
+      console.log(`Sending confirmation email to ${paymentDetails.email}`);
+      console.log(`Sending confirmation SMS to ${paymentDetails.phone}`);
+      
       toast({
         title: "Payment Successful",
-        description: `You have successfully purchased ${paymentDetails.quantity} ticket(s) for ${event.title}`,
+        description: `You have successfully purchased ${paymentDetails.quantity} ticket(s) for ${event.title}. Confirmation details have been sent to your email and phone.`,
       });
+      
       setIsProcessing(false);
       onSuccess();
       onClose();
@@ -96,134 +158,174 @@ const PaymentModal = ({ event, isOpen, onClose, onSuccess }: PaymentModalProps) 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px]">
-        <form onSubmit={handleSubmit}>
-          <DialogHeader>
-            <DialogTitle>Purchase Tickets - {event.title}</DialogTitle>
-            <DialogDescription>
-              Fill in your payment details to complete your ticket purchase.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="grid gap-6 py-4">
-            <div className="grid gap-2">
-              <Label>Event Information</Label>
-              <div className="bg-muted p-3 rounded-md">
-                <div className="font-medium">{event.title}</div>
-                <div className="text-sm text-muted-foreground">{event.date} at {event.time}</div>
-                <div className="text-sm text-muted-foreground">{event.location}</div>
-              </div>
-            </div>
+        {step === "details" ? (
+          <form onSubmit={handleSubmitDetails}>
+            <DialogHeader>
+              <DialogTitle>Purchase Tickets - {event.title}</DialogTitle>
+              <DialogDescription>
+                Enter your details to proceed with ticket purchase.
+              </DialogDescription>
+            </DialogHeader>
             
-            <div className="grid gap-2">
-              <Label htmlFor="quantity">Number of Tickets</Label>
-              <div className="flex items-center">
-                <Button 
-                  type="button"
-                  variant="outline" 
-                  size="icon" 
-                  className="h-8 w-8"
-                  onClick={() => handleQuantityChange(-1)}
-                  disabled={paymentDetails.quantity <= 1}
-                >
-                  -
-                </Button>
-                <Input
-                  id="quantity"
-                  name="quantity"
-                  type="number"
-                  min="1"
-                  value={paymentDetails.quantity}
-                  onChange={handleChange}
-                  className="h-8 w-16 mx-2 text-center"
-                />
-                <Button 
-                  type="button"
-                  variant="outline" 
-                  size="icon" 
-                  className="h-8 w-8"
-                  onClick={() => handleQuantityChange(1)}
-                >
-                  +
-                </Button>
-                <div className="ml-auto font-medium">
-                  ${calculateTotal()}
-                </div>
-              </div>
-            </div>
-            
-            <div className="grid gap-2">
-              <Label htmlFor="cardholderName">Cardholder Name</Label>
-              <Input
-                id="cardholderName"
-                name="cardholderName"
-                value={paymentDetails.cardholderName}
-                onChange={handleChange}
-                placeholder="John Doe"
-                required
-              />
-            </div>
-            
-            <div className="grid gap-2">
-              <Label htmlFor="cardNumber">Card Number</Label>
-              <div className="relative">
-                <Input
-                  id="cardNumber"
-                  name="cardNumber"
-                  value={paymentDetails.cardNumber}
-                  onChange={handleChange}
-                  placeholder="4242 4242 4242 4242"
-                  className="pr-10"
-                  maxLength={19}
-                  required
-                />
-                <CreditCard className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-6 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="expiryDate">Expiry Date</Label>
-                <div className="relative">
-                  <Input
-                    id="expiryDate"
-                    name="expiryDate"
-                    value={paymentDetails.expiryDate}
-                    onChange={handleChange}
-                    placeholder="MM/YY"
-                    maxLength={5}
-                    required
-                  />
-                  <CalendarDays className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Label>Event Information</Label>
+                <div className="bg-muted p-3 rounded-md">
+                  <div className="font-medium">{event.title}</div>
+                  <div className="text-sm text-muted-foreground">{event.date} at {event.time}</div>
+                  <div className="text-sm text-muted-foreground">{event.location}</div>
+                  <div className="mt-1 font-medium text-primary">
+                    ₹{event.ticketPrice || "49.99"} per ticket
+                  </div>
                 </div>
               </div>
               
               <div className="grid gap-2">
-                <Label htmlFor="cvv">CVV</Label>
+                <Label htmlFor="quantity">Number of Tickets</Label>
+                <div className="flex items-center">
+                  <Button 
+                    type="button"
+                    variant="outline" 
+                    size="icon" 
+                    className="h-8 w-8"
+                    onClick={() => handleQuantityChange(-1)}
+                    disabled={paymentDetails.quantity <= 1}
+                  >
+                    -
+                  </Button>
+                  <Input
+                    id="quantity"
+                    name="quantity"
+                    type="number"
+                    min="1"
+                    value={paymentDetails.quantity}
+                    onChange={handleChange}
+                    className="h-8 w-16 mx-2 text-center"
+                  />
+                  <Button 
+                    type="button"
+                    variant="outline" 
+                    size="icon" 
+                    className="h-8 w-8"
+                    onClick={() => handleQuantityChange(1)}
+                  >
+                    +
+                  </Button>
+                  <div className="ml-auto font-medium">
+                    Total: ₹{calculateTotal()}
+                  </div>
+                </div>
+              </div>
+              
+              <div className="grid gap-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  value={paymentDetails.name}
+                  onChange={handleChange}
+                  placeholder="John Doe"
+                  required
+                />
+              </div>
+              
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email Address</Label>
                 <div className="relative">
                   <Input
-                    id="cvv"
-                    name="cvv"
-                    value={paymentDetails.cvv}
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={paymentDetails.email}
                     onChange={handleChange}
-                    placeholder="123"
-                    maxLength={3}
+                    placeholder="you@example.com"
+                    className="pl-10"
                     required
                   />
-                  <Lock className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                </div>
+              </div>
+              
+              <div className="grid gap-2">
+                <Label htmlFor="phone">Phone Number</Label>
+                <div className="relative">
+                  <Input
+                    id="phone"
+                    name="phone"
+                    value={paymentDetails.phone}
+                    onChange={handleChange}
+                    placeholder="9876543210"
+                    className="pl-10"
+                    required
+                  />
+                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 </div>
               </div>
             </div>
-          </div>
-          
-          <DialogFooter>
-            <Button variant="outline" type="button" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isProcessing}>
-              {isProcessing ? "Processing..." : `Pay $${calculateTotal()}`}
-            </Button>
-          </DialogFooter>
-        </form>
+            
+            <DialogFooter>
+              <Button variant="outline" type="button" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button type="submit">
+                Continue to Payment
+              </Button>
+            </DialogFooter>
+          </form>
+        ) : (
+          <>
+            <DialogHeader>
+              <DialogTitle>Secure Payment</DialogTitle>
+              <DialogDescription>
+                Complete your payment to finalize your ticket purchase.
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="space-y-4 py-4">
+              <div className="bg-muted p-3 rounded-md">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <div className="font-medium">{event.title}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {paymentDetails.quantity} ticket(s) x ₹{event.ticketPrice || "49.99"}
+                    </div>
+                  </div>
+                  <div className="text-lg font-bold">
+                    ₹{calculateTotal()}
+                  </div>
+                </div>
+              </div>
+              
+              <div className="border border-muted p-4 rounded-lg">
+                <div className="flex items-center mb-4">
+                  <img src="https://razorpay.com/assets/razorpay-glyph.svg" alt="Razorpay" className="h-8 mr-2" />
+                  <div>
+                    <div className="font-medium">Razorpay Secure Checkout</div>
+                    <div className="text-xs text-muted-foreground">Safe and secure payments</div>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="grid grid-cols-4 gap-2">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" className="h-6 object-contain" />
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" className="h-6 object-contain" />
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d1/RuPay.svg" alt="RuPay" className="h-6 object-contain" />
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/UPI-Logo-vector.svg" alt="UPI" className="h-6 object-contain" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setStep("details")}>
+                Back
+              </Button>
+              <Button onClick={handlePayment} disabled={isProcessing}>
+                {isProcessing ? "Processing..." : `Pay ₹${calculateTotal()}`}
+              </Button>
+            </DialogFooter>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );

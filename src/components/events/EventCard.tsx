@@ -8,6 +8,12 @@ import { Button } from "@/components/ui/button";
 import PaymentModal from "./PaymentModal";
 import { toast } from "@/hooks/use-toast";
 
+export interface VenueDetails {
+  name: string;
+  address: string;
+  facilities: string[];
+}
+
 export interface Event {
   id: string;
   title: string;
@@ -20,6 +26,8 @@ export interface Event {
   totalSeats: number;
   enrolledSeats: number;
   isRegistered?: boolean;
+  ticketPrice?: number;
+  venueDetails?: VenueDetails;
 }
 
 interface EventCardProps {
@@ -46,7 +54,7 @@ const EventCard = ({ event, isUserDashboard = false }: EventCardProps) => {
   
   return (
     <>
-      <Card className="h-full flex flex-col hover:shadow-md transition-shadow bg-gradient-to-br from-card to-card/95 border-accent/20">
+      <Card className="h-full flex flex-col hover:shadow-md transition-shadow card-gradient">
         <div className="relative aspect-video overflow-hidden rounded-t-lg">
           <img 
             src={event.image || "https://images.unsplash.com/photo-1501854140801-50d01698950b"} 
@@ -56,6 +64,11 @@ const EventCard = ({ event, isUserDashboard = false }: EventCardProps) => {
           <div className="absolute top-2 right-2 bg-primary/90 backdrop-blur-sm text-primary-foreground px-3 py-1 rounded-full text-xs font-medium">
             {event.category}
           </div>
+          {event.ticketPrice && (
+            <div className="absolute bottom-2 left-2 bg-accent/90 backdrop-blur-sm text-accent-foreground px-3 py-1 rounded-full text-xs font-medium">
+              ₹{event.ticketPrice}
+            </div>
+          )}
         </div>
         
         <CardHeader className="pb-2">
@@ -96,7 +109,7 @@ const EventCard = ({ event, isUserDashboard = false }: EventCardProps) => {
           {isUserDashboard ? (
             <div className="w-full space-y-2">
               {event.isRegistered && (
-                <div className="text-sm bg-primary/20 text-primary p-2 rounded-lg">
+                <div className="text-sm bg-primary/20 text-primary-foreground p-2 rounded-lg">
                   You are registered for this event
                 </div>
               )}

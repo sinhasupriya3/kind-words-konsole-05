@@ -1,6 +1,7 @@
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Search } from "lucide-react";
+import { Search, Ticket, CalendarClock, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,12 +17,18 @@ const registeredEvents: Event[] = [
     description: "Join us for the biggest tech conference of the year featuring the latest innovations and industry leaders.",
     date: "2025-06-15",
     time: "09:00 AM - 05:00 PM",
-    location: "Convention Center, San Francisco",
+    location: "Bangalore International Exhibition Centre, Bengaluru",
     category: "Technology",
     image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
     totalSeats: 500,
     enrolledSeats: 380,
     isRegistered: true,
+    ticketPrice: 1999,
+    venueDetails: {
+      name: "Bangalore International Exhibition Centre",
+      address: "10th Mile, Tumkur Road, Madavara, Bengaluru, Karnataka 562123",
+      facilities: ["Wi-Fi", "Parking", "Food Court", "Accessibility Features"]
+    }
   },
   {
     id: "3",
@@ -29,12 +36,18 @@ const registeredEvents: Event[] = [
     description: "Connect with founders, investors, and tech enthusiasts in this networking event.",
     date: "2025-05-20",
     time: "06:00 PM - 09:00 PM",
-    location: "Innovation Hub, Seattle",
+    location: "Bombay Stock Exchange, Mumbai",
     category: "Networking",
     image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
     totalSeats: 200,
     enrolledSeats: 150,
     isRegistered: true,
+    ticketPrice: 499,
+    venueDetails: {
+      name: "Bombay Stock Exchange",
+      address: "Phiroze Jeejeebhoy Towers, Dalal Street, Mumbai, Maharashtra 400001",
+      facilities: ["Rooftop Terrace", "Conference Rooms", "Catering"]
+    }
   },
 ];
 
@@ -45,11 +58,17 @@ const searchedEvents: Event[] = [
     description: "A hands-on workshop for learning modern web development techniques and tools.",
     date: "2025-07-10",
     time: "10:00 AM - 03:00 PM",
-    location: "Digital Academy, New York",
+    location: "T-Hub, Hyderabad",
     category: "Workshop",
     image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
     totalSeats: 100,
     enrolledSeats: 85,
+    ticketPrice: 799,
+    venueDetails: {
+      name: "T-Hub",
+      address: "TSIIC Phase 2, Raidurgam, Hyderabad, Telangana 500081",
+      facilities: ["High-speed Internet", "Developer Workstations", "Refreshments"]
+    }
   },
   {
     id: "5",
@@ -57,17 +76,23 @@ const searchedEvents: Event[] = [
     description: "Learn the principles of effective UX/UI design from industry experts.",
     date: "2025-06-25",
     time: "10:00 AM - 04:00 PM",
-    location: "Design Studio, San Diego",
+    location: "Infopark, Kochi",
     category: "Workshop",
     image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158",
     totalSeats: 150,
     enrolledSeats: 120,
+    ticketPrice: 899,
+    venueDetails: {
+      name: "Infopark",
+      address: "Infopark Kochi Campus, Kakkanad, Kochi, Kerala 682042",
+      facilities: ["Design Studios", "Discussion Areas", "Creative Spaces"]
+    }
   },
 ];
 
 const DashboardPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [userName, setUserName] = useState("John"); // Will be replaced with actual user info
+  const [userName, setUserName] = useState("Rahul"); // Will be replaced with actual user info
   
   // Simulate fetching user information
   useEffect(() => {
@@ -75,7 +100,7 @@ const DashboardPage = () => {
     const fetchUserInfo = async () => {
       try {
         await new Promise((resolve) => setTimeout(resolve, 500));
-        setUserName("John");
+        setUserName("Rahul");
       } catch (error) {
         console.error("Error fetching user info:", error);
       }
@@ -107,9 +132,35 @@ const DashboardPage = () => {
           </div>
         </div>
         
+        {/* Actions buttons */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Link to="/events">
+            <Button variant="outline" className="w-full h-auto py-3 justify-start card-gradient">
+              <CalendarClock className="mr-2 h-5 w-5" />
+              Browse Events
+            </Button>
+          </Link>
+          <Link to="/tickets">
+            <Button variant="outline" className="w-full h-auto py-3 justify-start card-gradient">
+              <Ticket className="mr-2 h-5 w-5" />
+              Buy Tickets
+            </Button>
+          </Link>
+          <Link to="/venues">
+            <Button variant="outline" className="w-full h-auto py-3 justify-start card-gradient">
+              <MapPin className="mr-2 h-5 w-5" />
+              Explore Venues
+            </Button>
+          </Link>
+          <Button variant="outline" className="w-full h-auto py-3 justify-start card-gradient">
+            <Ticket className="mr-2 h-5 w-5" />
+            My Tickets
+          </Button>
+        </div>
+        
         {/* Upcoming events with countdown */}
         <div>
-          <h2 className="text-xl font-semibold mb-4">Upcoming Events</h2>
+          <h2 className="section-title mb-6">Upcoming Events</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {registeredEvents.map((event) => (
               <EventCountdown 
@@ -124,7 +175,7 @@ const DashboardPage = () => {
         {/* Registered Events */}
         <div>
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Your Registered Events</h2>
+            <h2 className="section-title">Your Registered Events</h2>
             <Link to="/events">
               <Button variant="outline" size="sm">
                 Browse More Events
@@ -159,7 +210,7 @@ const DashboardPage = () => {
         {/* Recently Viewed/Searched Events */}
         <div>
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Recently Viewed Events</h2>
+            <h2 className="section-title">Recently Viewed Events</h2>
           </div>
           
           {searchedEvents.length > 0 ? (
@@ -185,7 +236,7 @@ const DashboardPage = () => {
         
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Card>
+          <Card className="card-gradient">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium">
                 Registered Events
@@ -205,7 +256,7 @@ const DashboardPage = () => {
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="card-gradient">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium">
                 Upcoming Events
@@ -221,7 +272,7 @@ const DashboardPage = () => {
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="card-gradient">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium">
                 Past Events
