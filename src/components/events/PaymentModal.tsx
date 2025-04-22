@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -68,7 +67,6 @@ const PaymentModal = ({ event, isOpen, onClose, onSuccess }: PaymentModalProps) 
       return;
     }
     
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(paymentDetails.email)) {
       toast({
@@ -79,7 +77,6 @@ const PaymentModal = ({ event, isOpen, onClose, onSuccess }: PaymentModalProps) 
       return;
     }
     
-    // Validate phone format (Indian phone number)
     const phoneRegex = /^[6-9]\d{9}$/;
     if (!phoneRegex.test(paymentDetails.phone)) {
       toast({
@@ -97,23 +94,20 @@ const PaymentModal = ({ event, isOpen, onClose, onSuccess }: PaymentModalProps) 
     setIsProcessing(true);
     
     try {
-      // This would be a real Razorpay integration in production
-      // Simulate API call to create Razorpay order
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // In a real app, this would come from your backend
       const orderId = 'order_' + Math.random().toString(36).substring(2, 15);
-      const totalAmount = parseFloat(calculateTotal()) * 100; // Convert to paise
+      const totalAmount = parseFloat(calculateTotal()) * 100;
       
       const options = {
-        key: "rzp_test_yourkeyhere", // Replace with your actual Razorpay key
+        key: "rzp_test_yourkeyhere",
         amount: totalAmount,
         currency: "INR",
         name: "Event Ticket",
         description: `Tickets for ${event.title}`,
         order_id: orderId,
         handler: function() {
-          handlePaymentSuccess();
+          onPaymentSuccess();
         },
         prefill: {
           name: paymentDetails.name,
@@ -125,34 +119,35 @@ const PaymentModal = ({ event, isOpen, onClose, onSuccess }: PaymentModalProps) 
           quantity: paymentDetails.quantity
         },
         theme: {
-          color: "#B288F5"
+          color: "#fe5f55"
         }
       };
       
-      // In a real app, we would load the Razorpay script and open the payment window
-      // Simulating payment success for the demo
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Send notification email and SMS
       console.log(`Sending confirmation email to ${paymentDetails.email}`);
       console.log(`Sending confirmation SMS to ${paymentDetails.phone}`);
       
-      toast({
-        title: "Payment Successful",
-        description: `You have successfully purchased ${paymentDetails.quantity} ticket(s) for ${event.title}. Confirmation details have been sent to your email and phone.`,
-      });
-      
-      setIsProcessing(false);
-      onSuccess();
-      onClose();
+      onPaymentSuccess();
     } catch (error) {
-      setIsProcessing(false);
+      console.error('Payment error:', error);
       toast({
         title: "Payment Failed",
         description: "There was an error processing your payment. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsProcessing(false);
     }
+  };
+  
+  const onPaymentSuccess = () => {
+    toast({
+      title: "Payment Successful",
+      description: `You have successfully purchased ${paymentDetails.quantity} ticket(s) for ${event.title}. Confirmation details have been sent to your email and phone.`,
+    });
+    onSuccess();
+    onClose();
   };
   
   return (

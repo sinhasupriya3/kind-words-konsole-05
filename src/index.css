@@ -5,25 +5,21 @@
 
 @layer base {
   :root {
-    --background: 270 100% 98%;
-    --foreground: 260 25% 31%;
-    --card: 0 0% 100%;
-    --card-foreground: 260 25% 31%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 260 25% 31%;
-    --primary: 261 85% 75%;
-    --primary-foreground: 263 34% 13%;
-    --secondary: 38 100% 85%;
-    --secondary-foreground: 260 25% 31%;
-    --muted: 270 100% 95%;
-    --muted-foreground: 260 15% 43%;
-    --accent: 42 100% 70%;
-    --accent-foreground: 27 81% 26%;
-    --destructive: 0 84% 82%;
-    --destructive-foreground: 0 74% 31%;
-    --border: 276 28% 87%;
-    --input: 270 100% 95%;
-    --ring: 261 85% 75%;
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+    --primary: 359 84% 66%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 36 89% 72%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 86 24% 69%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 142 65% 86%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 60 19% 85%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 359 84% 66%;
     --radius: 0.5rem;
   }
 
@@ -32,19 +28,19 @@
   }
 
   body {
-    @apply bg-background text-foreground bg-hero-pattern;
+    @apply bg-gradient-to-br from-[#eef5db] via-[#c7efcf] to-[#d6d1b1] min-h-screen text-foreground;
   }
   
   .card-gradient {
-    @apply bg-gradient-to-br from-white to-muted/50 border-primary/10 hover:shadow-md hover:shadow-primary/10 transition-all duration-300;
+    @apply bg-gradient-to-br from-white via-[#ffffff80] to-[#fe5f5510] border-primary/10 hover:shadow-md hover:shadow-primary/10 transition-all duration-300;
   }
 }
 
 .section-title {
-  @apply text-2xl font-bold text-foreground relative inline-block;
+  @apply text-2xl font-bold text-[#fe5f55] relative inline-block;
 }
 
 .section-title::after {
   content: '';
-  @apply absolute -bottom-2 left-0 w-1/2 h-1 bg-primary rounded-full;
+  @apply absolute -bottom-2 left-0 w-1/2 h-1 bg-[#f0b67f] rounded-full;
 }

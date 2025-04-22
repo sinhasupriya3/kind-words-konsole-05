@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Bot } from "lucide-react";
@@ -30,7 +29,6 @@ const Chatbot = ({ events = [] }: ChatbotProps) => {
     setInputValue(e.target.value);
   };
 
-  // Generate welcome message based on current page
   useEffect(() => {
     if (isOpen) {
       let welcomeMessage = "";
@@ -59,38 +57,48 @@ const Chatbot = ({ events = [] }: ChatbotProps) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
 
-    // Add user message
     const userMessage = { role: "user" as const, content: inputValue };
     setMessages([...messages, userMessage]);
     
-    // Generate bot response about events
     setTimeout(() => {
       let botResponse = "I'm sorry, I don't have specific information about that. Is there something else I can help you with?";
       
-      // Simple keyword matching
       const lowercaseInput = inputValue.toLowerCase();
       
-      // Handle event-related queries
-      if (lowercaseInput.includes("event") || lowercaseInput.includes("events")) {
+      if (lowercaseInput.includes("festival")) {
+        const festivals = events.filter(e => e.category.toLowerCase() === "festival");
+        botResponse = festivals.length > 0 
+          ? `We have ${festivals.length} festivals: ${festivals.map(e => e.title).join(", ")}. Would you like to know more about any specific festival?` 
+          : "Currently we don't have any festivals listed, but check back soon for updates!";
+      }
+      else if (lowercaseInput.includes("concert")) {
+        const concerts = events.filter(e => e.category.toLowerCase() === "concert");
+        botResponse = concerts.length > 0 
+          ? `We have ${concerts.length} concerts: ${concerts.map(e => e.title).join(", ")}. Would you like to know more about any specific concert?` 
+          : "Currently we don't have any concerts listed, but check back soon for updates!";
+      }
+      else if (lowercaseInput.includes("workshop")) {
+        const workshops = events.filter(e => e.category.toLowerCase() === "workshop");
+        botResponse = workshops.length > 0 
+          ? `We have ${workshops.length} workshops: ${workshops.map(e => e.title).join(", ")}. These are hands-on learning sessions with industry experts.` 
+          : "Currently we don't have any workshops listed, but check back soon for updates!";
+      }
+      else if (lowercaseInput.includes("event") || lowercaseInput.includes("events")) {
         if (events.length > 0) {
           botResponse = `We have ${events.length} events across different cities in India. Some of them include: ${events.slice(0, 3).map(e => e.title).join(", ")}. Is there a specific event or city you're interested in?`;
         } else {
           botResponse = "We don't have any events listed at the moment. Please check back later!";
         }
       } 
-      // Handle ticket-related queries
       else if (lowercaseInput.includes("ticket") || lowercaseInput.includes("registration") || lowercaseInput.includes("pay") || lowercaseInput.includes("book")) {
         botResponse = "You can purchase tickets for any event by clicking the 'Buy Tickets' button. We accept payments through Razorpay, which supports credit/debit cards, UPI, and net banking. Your tickets and confirmation will be sent to your email and phone number.";
       }
-      // Handle venue-related queries 
       else if (lowercaseInput.includes("venue") || lowercaseInput.includes("location") || lowercaseInput.includes("place") || lowercaseInput.includes("where")) {
         botResponse = "Our events are hosted at premium venues across India including Bengaluru, Mumbai, Delhi, Hyderabad, and Kochi. Each venue offers different facilities. You can view detailed venue information on the specific event page.";
       }
-      // Handle price-related queries
       else if (lowercaseInput.includes("price") || lowercaseInput.includes("cost") || lowercaseInput.includes("fee") || lowercaseInput.includes("much")) {
         botResponse = "Ticket prices vary depending on the event. Our workshops range from ₹799 to ₹899, conferences from ₹1499 to ₹1999, and networking events from ₹499 to ₹599. You can see the specific price on each event card.";
       }
-      // Handle city-specific queries
       else if (lowercaseInput.includes("bengaluru") || lowercaseInput.includes("bangalore")) {
         const bangaloreEvents = events.filter(e => e.location.toLowerCase().includes("bengaluru") || e.location.toLowerCase().includes("bangalore"));
         botResponse = bangaloreEvents.length > 0 
@@ -115,24 +123,15 @@ const Chatbot = ({ events = [] }: ChatbotProps) => {
           ? `We have ${hyderabadEvents.length} events in Hyderabad: ${hyderabadEvents.map(e => e.title).join(", ")}. Would you like more details?` 
           : "We don't currently have events in Hyderabad, but we're adding new events regularly. Check back soon!";
       }
-      // Handle category-specific queries
       else if (lowercaseInput.includes("tech") || lowercaseInput.includes("technology")) {
         const techEvents = events.filter(e => e.category.toLowerCase() === "technology");
         botResponse = techEvents.length > 0 
           ? `We have ${techEvents.length} technology events: ${techEvents.map(e => e.title).join(", ")}. These events cover topics like AI, data science, and more.` 
           : "We don't currently have technology events, but we're adding new events regularly.";
       }
-      else if (lowercaseInput.includes("workshop")) {
-        const workshopEvents = events.filter(e => e.category.toLowerCase() === "workshop");
-        botResponse = workshopEvents.length > 0 
-          ? `We have ${workshopEvents.length} workshops: ${workshopEvents.map(e => e.title).join(", ")}. These are hands-on learning sessions with industry experts.` 
-          : "We don't currently have workshop events, but we're adding new workshops regularly.";
-      }
-      // Handle time-related queries
       else if (lowercaseInput.includes("when") || lowercaseInput.includes("date") || lowercaseInput.includes("time")) {
         botResponse = "Each event has its own date and time. You can see this information on the event cards or on the detailed event page. We have events scheduled throughout 2025, with most concentrated between May and September.";
       }
-      // Check if the user is asking about a specific event
       else {
         const mentionedEvent = events.find(event => 
           lowercaseInput.includes(event.title.toLowerCase())
