@@ -21,11 +21,11 @@ export default {
       colors: {
         border: "#e0d5e8",
         input: "#f1e3ff",
-        ring: "#B288F5",
+        ring: "#a9def9",
         background: "#FCF5FF",
         foreground: "#4B3B63",
         primary: {
-          DEFAULT: "#B288F5",
+          DEFAULT: "#a9def9",
           foreground: "#1F1729"
         },
         secondary: {

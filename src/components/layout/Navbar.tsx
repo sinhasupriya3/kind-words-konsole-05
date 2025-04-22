@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, User, LogOut } from "lucide-react";
@@ -6,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // This will be replaced with actual auth check
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -14,10 +13,8 @@ const Navbar = () => {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    // This will be replaced with actual logout functionality
   };
 
-  // Mock login for demo purpose - will be replaced with actual auth
   const handleMockLogin = () => {
     setIsLoggedIn(true);
   };
@@ -28,11 +25,10 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center">
-              <span className="font-bold text-xl">EventHub</span>
+              <span className="font-bold text-xl">Eventory</span>
             </Link>
           </div>
 
-          {/* Desktop menu */}
           <div className="hidden md:block">
             <div className="flex items-center space-x-4">
               <Link to="/events" className="text-foreground hover:text-primary px-3 py-2 rounded-md">
@@ -59,7 +55,6 @@ const Navbar = () => {
                   <Link to="/signup">
                     <Button size="sm">Sign Up</Button>
                   </Link>
-                  {/* Mock login button for demo purpose */}
                   <Button variant="outline" size="sm" onClick={handleMockLogin} className="hidden">
                     Demo Login
                   </Button>
@@ -68,7 +63,6 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Mobile menu button */}
           <div className="md:hidden">
             <button
               type="button"
@@ -81,7 +75,6 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile menu */}
         {isOpen && (
           <div className="md:hidden pb-4">
             <div className="flex flex-col space-y-2">

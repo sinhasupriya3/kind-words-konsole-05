@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,7 +6,7 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 47.4% 11.2%;
-    --primary: 359 84% 66%;
+    --primary: 201 84% 75%; /* a9def9 in HSL */
     --primary-foreground: 210 40% 98%;
     --secondary: 36 89% 72%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -19,7 +18,7 @@
     --destructive-foreground: 210 40% 98%;
     --border: 60 19% 85%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 359 84% 66%;
+    --ring: 201 84% 75%; /* a9def9 in HSL */
     --radius: 0.5rem;
   }
 
@@ -28,11 +27,11 @@
   }
 
   body {
-    @apply bg-gradient-to-br from-[#eef5db] via-[#c7efcf] to-[#d6d1b1] min-h-screen text-foreground;
+    @apply bg-gradient-to-br from-[#eef5db] via-[#a9def9] to-[#d6d1b1] min-h-screen text-foreground;
   }
   
   .card-gradient {
-    @apply bg-gradient-to-br from-white via-[#ffffff80] to-[#fe5f5510] border-primary/10 hover:shadow-md hover:shadow-primary/10 transition-all duration-300;
+    @apply bg-gradient-to-br from-white via-[#ffffff80] to-[#a9def910] border-primary/10 hover:shadow-md hover:shadow-primary/10 transition-all duration-300;
   }
 }
 
