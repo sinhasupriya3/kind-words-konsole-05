@@ -264,12 +264,12 @@ const VenueCard = ({ venue }: { venue: typeof venues[0] }) => {
 };
 
 const VenueFinder = () => {
-  const [capacity, setCapacity] = useState("");
+  const [capacity, setCapacity] = useState("all");
   const [facilities, setFacilities] = useState<string[]>([]);
   const allFacilities = Array.from(new Set(venues.flatMap(venue => venue.facilities)));
   
   const filteredVenues = venues.filter(venue => {
-    const meetsCapacity = capacity === "" || venue.capacity >= parseInt(capacity);
+    const meetsCapacity = capacity === "all" || venue.capacity >= parseInt(capacity);
     const meetsFacilities = facilities.length === 0 || 
                             facilities.every(facility => venue.facilities.includes(facility));
     
@@ -294,7 +294,7 @@ const VenueFinder = () => {
                   <SelectValue placeholder="Any capacity" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Any capacity</SelectItem>
+                  <SelectItem value="all">Any capacity</SelectItem>
                   <SelectItem value="50">50+</SelectItem>
                   <SelectItem value="100">100+</SelectItem>
                   <SelectItem value="200">200+</SelectItem>
