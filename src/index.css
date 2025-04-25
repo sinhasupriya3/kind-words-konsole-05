@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,14 +8,14 @@
     --background: 0 0% 100%;
     --foreground: 222.2 47.4% 11.2%;
     --primary: 201 84% 75%; /* a9def9 in HSL */
-    --primary-foreground: 210 40% 98%;
-    --secondary: 36 89% 72%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 33 83% 72%; /* f0b67f in HSL */
     --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 86 24% 69%;
+    --muted: 50 16% 77%; /* d6d1b1 in HSL */
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 142 65% 86%;
+    --accent: 65 65% 91%; /* eef5db in HSL */
     --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 3 99% 67%; /* fe5f55 in HSL */
     --destructive-foreground: 210 40% 98%;
     --border: 60 19% 85%;
     --input: 214.3 31.8% 91.4%;

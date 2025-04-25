@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -19,38 +20,38 @@ export default {
     },
     extend: {
       colors: {
-        border: "#e0d5e8",
-        input: "#f1e3ff",
+        border: "hsl(60 19% 85%)",
+        input: "hsl(214.3 31.8% 91.4%)",
         ring: "#a9def9",
-        background: "#FCF5FF",
-        foreground: "#4B3B63",
+        background: "hsl(0 0% 100%)",
+        foreground: "hsl(222.2 47.4% 11.2%)",
         primary: {
-          DEFAULT: "#a9def9",
-          foreground: "#1F1729"
+          DEFAULT: "#a9def9", // a9def9 as requested
+          foreground: "hsl(222.2 47.4% 11.2%)"
         },
         secondary: {
-          DEFAULT: "#FFE3B3",
-          foreground: "#4B3B63"
+          DEFAULT: "#f0b67f", // f0b67f as requested
+          foreground: "hsl(222.2 47.4% 11.2%)"
         },
         destructive: {
-          DEFAULT: "#FCA5A5",
-          foreground: "#7F1D1D"
+          DEFAULT: "#fe5f55", // fe5f55 as requested
+          foreground: "hsl(210 40% 98%)"
         },
         muted: {
-          DEFAULT: "#EEE3FF",
-          foreground: "#6B5A80"
+          DEFAULT: "#d6d1b1", // d6d1b1 as requested
+          foreground: "hsl(215.4 16.3% 46.9%)"
         },
         accent: {
-          DEFAULT: "#FFD166",
-          foreground: "#78350F"
+          DEFAULT: "#eef5db", // eef5db as requested
+          foreground: "hsl(222.2 47.4% 11.2%)"
         },
         popover: {
-          DEFAULT: "#FFFFFF",
-          foreground: "#4B3B63"
+          DEFAULT: "hsl(0 0% 100%)",
+          foreground: "hsl(222.2 47.4% 11.2%)"
         },
         card: {
-          DEFAULT: "#FFFFFF",
-          foreground: "#4B3B63"
+          DEFAULT: "hsl(0 0% 100%)",
+          foreground: "hsl(222.2 47.4% 11.2%)"
         }
       },
       borderRadius: {

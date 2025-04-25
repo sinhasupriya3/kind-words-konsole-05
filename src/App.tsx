@@ -12,6 +12,7 @@ import SignUpPage from "./pages/SignUpPage";
 import DashboardPage from "./pages/DashboardPage";
 import TicketsPage from "./pages/TicketsPage";
 import VenuesPage from "./pages/VenuesPage";
+import CollegeEventsPage from "./pages/CollegeEventsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/college-events" element={<CollegeEventsPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
