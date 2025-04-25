@@ -1,5 +1,5 @@
-
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Download, QrCode, Ticket, MapPin, Calendar, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,7 +17,6 @@ interface TicketData {
   isCancellable: boolean;
 }
 
-// Mock data - would come from backend in real app
 const mockTickets: TicketData[] = [
   {
     id: "1",
