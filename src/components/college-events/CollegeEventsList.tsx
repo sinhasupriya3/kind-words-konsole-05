@@ -221,12 +221,12 @@ const EventCard = ({ event }: { event: typeof collegeEvents[0] }) => {
 
 const CollegeEventsList = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
   
   const filteredEvents = collegeEvents.filter(event => {
     const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                      event.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = categoryFilter === "" || event.category === categoryFilter;
+    const matchesCategory = categoryFilter === "all" || event.category === categoryFilter;
     
     return matchesSearch && matchesCategory;
   });
@@ -253,7 +253,7 @@ const CollegeEventsList = () => {
               <SelectValue placeholder="Filter by category" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Categories</SelectItem>
+              <SelectItem value="all">All Categories</SelectItem>
               {uniqueCategories.map((category) => (
                 <SelectItem key={category} value={category}>{category}</SelectItem>
               ))}
@@ -261,7 +261,7 @@ const CollegeEventsList = () => {
           </Select>
           <Button variant="outline" onClick={() => {
             setSearchQuery("");
-            setCategoryFilter("");
+            setCategoryFilter("all");
           }}>
             <Filter size={16} className="mr-2" />
             Clear

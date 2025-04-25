@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { 
   Users, 
@@ -163,12 +162,12 @@ const AttendeeManagement = () => {
   const [selectedEvent, setSelectedEvent] = useState(myEvents[0]);
   const [filteredAttendees, setFilteredAttendees] = useState(attendees);
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     
-    if (!query && !statusFilter) {
+    if (!query && statusFilter === "all") {
       setFilteredAttendees(attendees);
       return;
     }
@@ -179,7 +178,7 @@ const AttendeeManagement = () => {
         attendee.email.toLowerCase().includes(query.toLowerCase()) ||
         attendee.phone.includes(query);
       
-      const matchesStatus = !statusFilter || attendee.status === statusFilter;
+      const matchesStatus = statusFilter === "all" || attendee.status === statusFilter;
       
       return matchesQuery && matchesStatus;
     });
@@ -190,7 +189,7 @@ const AttendeeManagement = () => {
   const handleFilterByStatus = (status: string) => {
     setStatusFilter(status);
     
-    if (!status && !searchQuery) {
+    if (status === "all" && !searchQuery) {
       setFilteredAttendees(attendees);
       return;
     }
@@ -201,7 +200,7 @@ const AttendeeManagement = () => {
         attendee.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
         attendee.phone.includes(searchQuery);
       
-      const matchesStatus = !status || attendee.status === status;
+      const matchesStatus = status === "all" || attendee.status === status;
       
       return matchesQuery && matchesStatus;
     });
@@ -442,7 +441,7 @@ const AttendeeManagement = () => {
                       <SelectValue placeholder="Filter by status" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Statuses</SelectItem>
+                      <SelectItem value="all">All Statuses</SelectItem>
                       <SelectItem value="Confirmed">Confirmed</SelectItem>
                       <SelectItem value="Waitlist">Waitlist</SelectItem>
                       <SelectItem value="Cancelled">Cancelled</SelectItem>
