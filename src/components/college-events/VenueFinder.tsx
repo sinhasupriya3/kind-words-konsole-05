@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { MapPin, Calendar, Clock, Users, Wifi, Utensils, Parking, Accessibility, Check } from "lucide-react";
+import { MapPin, Calendar, Clock, Users, Wifi, Utensils, CircleParking, Accessibility, Check } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -97,7 +97,7 @@ const FacilityIcon = ({ name }: { name: string }) => {
     case "Food Stalls":
       return <Utensils size={16} />;
     case "Parking":
-      return <Parking size={16} />;
+      return <CircleParking size={16} />;
     case "Accessibility":
       return <Accessibility size={16} />;
     default:

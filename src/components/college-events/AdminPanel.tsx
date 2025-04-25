@@ -16,7 +16,8 @@ import {
   Trash2,
   MessageSquare,
   Clock,
-  MapPin
+  MapPin,
+  AlertCircle
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
