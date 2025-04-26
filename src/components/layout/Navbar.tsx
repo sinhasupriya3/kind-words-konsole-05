@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Menu, X, User, LogOut, School, Ticket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
@@ -9,12 +9,24 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    // Check authentication state from localStorage on component mount
-    const authStatus = localStorage.getItem("isLoggedIn") === "true";
-    setIsLoggedIn(authStatus);
-  }, []);
+    // Check authentication state from localStorage on component mount and route change
+    const checkAuthStatus = () => {
+      const authStatus = localStorage.getItem("isLoggedIn") === "true";
+      setIsLoggedIn(authStatus);
+    };
+    
+    checkAuthStatus();
+    
+    // Setup a listener for storage events to handle login state changes
+    window.addEventListener('storage', checkAuthStatus);
+    
+    return () => {
+      window.removeEventListener('storage', checkAuthStatus);
+    };
+  }, [location]);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -58,6 +70,10 @@ const Navbar = () => {
                   </Link>
                   <Link to="/dashboard" className="text-foreground hover:text-primary px-3 py-2 rounded-md">
                     Dashboard
+                  </Link>
+                  <Link to="/my-tickets" className="text-foreground hover:text-primary px-3 py-2 rounded-md flex items-center">
+                    <Ticket size={16} className="mr-1" />
+                    My Tickets
                   </Link>
                   <Button variant="ghost" size="sm" onClick={handleLogout} className="flex items-center gap-2">
                     <LogOut size={16} />
@@ -120,6 +136,14 @@ const Navbar = () => {
                     onClick={() => setIsOpen(false)}
                   >
                     Dashboard
+                  </Link>
+                  <Link 
+                    to="/my-tickets" 
+                    className="text-foreground hover:text-primary px-3 py-2 rounded-md flex items-center"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Ticket size={16} className="mr-1" />
+                    My Tickets
                   </Link>
                 </>
               )}

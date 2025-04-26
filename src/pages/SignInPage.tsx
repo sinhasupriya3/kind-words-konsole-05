@@ -19,6 +19,9 @@ const SignInPage = () => {
       // Set authentication state in localStorage
       localStorage.setItem("isLoggedIn", "true");
       
+      // Use storage event to notify other tabs/components
+      window.dispatchEvent(new Event('storage'));
+      
       // Show success message
       toast({
         title: "Sign In Successful",
