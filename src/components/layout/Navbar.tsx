@@ -1,23 +1,38 @@
 
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, User, LogOut, School, Ticket } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/hooks/use-toast";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check authentication state from localStorage on component mount
+    const authStatus = localStorage.getItem("isLoggedIn") === "true";
+    setIsLoggedIn(authStatus);
+  }, []);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
   const handleLogout = () => {
+    // Clear authentication state
+    localStorage.removeItem("isLoggedIn");
     setIsLoggedIn(false);
-  };
-
-  const handleMockLogin = () => {
-    setIsLoggedIn(true);
+    
+    // Show logout success message
+    toast({
+      title: "Signed Out",
+      description: "You have been successfully signed out.",
+    });
+    
+    // Navigate to home page
+    navigate("/");
   };
 
   return (
@@ -60,9 +75,6 @@ const Navbar = () => {
                   <Link to="/signup">
                     <Button size="sm">Sign Up</Button>
                   </Link>
-                  <Button variant="outline" size="sm" onClick={handleMockLogin} className="hidden">
-                    Demo Login
-                  </Button>
                 </>
               )}
             </div>

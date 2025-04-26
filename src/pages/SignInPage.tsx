@@ -16,6 +16,9 @@ const SignInPage = () => {
       // Log the sign-in attempt (will be replaced with API call)
       console.log("Sign in attempt:", { email, password });
       
+      // Set authentication state in localStorage
+      localStorage.setItem("isLoggedIn", "true");
+      
       // Show success message
       toast({
         title: "Sign In Successful",

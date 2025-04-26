@@ -19,7 +19,7 @@ const SignUpPage = () => {
       // Show success message
       toast({
         title: "Account Created",
-        description: "Your account has been created successfully.",
+        description: "Your account has been created successfully. Please sign in.",
       });
       
       // Redirect to sign in
