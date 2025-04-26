@@ -26,9 +26,6 @@ const Footer = () => {
             <Link to="/terms" className="text-foreground hover:text-primary text-sm">
               Terms & Conditions
             </Link>
-            <Link to="/my-tickets" className="text-foreground hover:text-primary text-sm">
-              My Tickets
-            </Link>
             <Link to="/college-events" className="text-foreground hover:text-primary text-sm">
               College Events
             </Link>

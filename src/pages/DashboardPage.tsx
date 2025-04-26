@@ -1,7 +1,6 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Search, Ticket, CalendarClock, MapPin } from "lucide-react";
+import { Search, Ticket, CalendarClock, MapPin, School } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,7 +8,6 @@ import MainLayout from "@/components/layout/MainLayout";
 import EventCard, { Event } from "@/components/events/EventCard";
 import EventCountdown from "@/components/events/EventCountdown";
 
-// Sample data - will be replaced with API calls
 const registeredEvents: Event[] = [
   {
     id: "1",
@@ -92,11 +90,9 @@ const searchedEvents: Event[] = [
 
 const DashboardPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [userName, setUserName] = useState("Rahul"); // Will be replaced with actual user info
+  const [userName, setUserName] = useState("Rahul");
   
-  // Simulate fetching user information
   useEffect(() => {
-    // This will be replaced with actual API call
     const fetchUserInfo = async () => {
       try {
         await new Promise((resolve) => setTimeout(resolve, 500));
@@ -132,7 +128,6 @@ const DashboardPage = () => {
           </div>
         </div>
         
-        {/* Actions buttons */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Link to="/events">
             <Button variant="outline" className="w-full h-auto py-3 justify-start card-gradient">
@@ -140,10 +135,10 @@ const DashboardPage = () => {
               Browse Events
             </Button>
           </Link>
-          <Link to="/tickets">
+          <Link to="/my-tickets">
             <Button variant="outline" className="w-full h-auto py-3 justify-start card-gradient">
               <Ticket className="mr-2 h-5 w-5" />
-              Buy Tickets
+              My Tickets
             </Button>
           </Link>
           <Link to="/venues">
@@ -152,13 +147,14 @@ const DashboardPage = () => {
               Explore Venues
             </Button>
           </Link>
-          <Button variant="outline" className="w-full h-auto py-3 justify-start card-gradient">
-            <Ticket className="mr-2 h-5 w-5" />
-            My Tickets
-          </Button>
+          <Link to="/college-events">
+            <Button variant="outline" className="w-full h-auto py-3 justify-start card-gradient">
+              <School className="mr-2 h-5 w-5" />
+              College Events
+            </Button>
+          </Link>
         </div>
         
-        {/* Upcoming events with countdown */}
         <div>
           <h2 className="section-title mb-6">Upcoming Events</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -172,7 +168,6 @@ const DashboardPage = () => {
           </div>
         </div>
         
-        {/* Registered Events */}
         <div>
           <div className="flex justify-between items-center mb-4">
             <h2 className="section-title">Your Registered Events</h2>
@@ -207,7 +202,6 @@ const DashboardPage = () => {
           )}
         </div>
         
-        {/* Recently Viewed/Searched Events */}
         <div>
           <div className="flex justify-between items-center mb-4">
             <h2 className="section-title">Recently Viewed Events</h2>
@@ -234,7 +228,6 @@ const DashboardPage = () => {
           )}
         </div>
         
-        {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Card className="card-gradient">
             <CardHeader className="pb-2">

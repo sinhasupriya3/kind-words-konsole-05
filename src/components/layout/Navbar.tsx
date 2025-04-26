@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, User, LogOut, School } from "lucide-react";
+import { Menu, X, User, LogOut, School, Ticket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
@@ -35,16 +35,12 @@ const Navbar = () => {
               <Link to="/events" className="text-foreground hover:text-primary px-3 py-2 rounded-md">
                 Events
               </Link>
-              {isLoggedIn && (
+              {isLoggedIn ? (
                 <>
                   <Link to="/college-events" className="text-foreground hover:text-primary px-3 py-2 rounded-md flex items-center">
                     <School size={16} className="mr-1" />
                     College Events
                   </Link>
-                </>
-              )}
-              {isLoggedIn ? (
-                <>
                   <Link to="/dashboard" className="text-foreground hover:text-primary px-3 py-2 rounded-md">
                     Dashboard
                   </Link>
@@ -72,6 +68,7 @@ const Navbar = () => {
             </div>
           </div>
 
+          {/* Mobile menu button */}
           <div className="md:hidden">
             <button
               type="button"
@@ -84,6 +81,7 @@ const Navbar = () => {
           </div>
         </div>
 
+        {/* Mobile menu */}
         {isOpen && (
           <div className="md:hidden pb-4">
             <div className="flex flex-col space-y-2">
@@ -95,17 +93,15 @@ const Navbar = () => {
                 Events
               </Link>
               {isLoggedIn && (
-                <Link 
-                  to="/college-events" 
-                  className="text-foreground hover:text-primary px-3 py-2 rounded-md flex items-center"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <School size={16} className="mr-1" />
-                  College Events
-                </Link>
-              )}
-              {isLoggedIn ? (
                 <>
+                  <Link 
+                    to="/college-events" 
+                    className="text-foreground hover:text-primary px-3 py-2 rounded-md flex items-center"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <School size={16} className="mr-1" />
+                    College Events
+                  </Link>
                   <Link 
                     to="/dashboard" 
                     className="text-foreground hover:text-primary px-3 py-2 rounded-md"
@@ -113,19 +109,21 @@ const Navbar = () => {
                   >
                     Dashboard
                   </Link>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => {
-                      handleLogout();
-                      setIsOpen(false);
-                    }} 
-                    className="flex items-center gap-2 justify-start"
-                  >
-                    <LogOut size={16} />
-                    <span>Sign Out</span>
-                  </Button>
                 </>
+              )}
+              {isLoggedIn ? (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => {
+                    handleLogout();
+                    setIsOpen(false);
+                  }} 
+                  className="flex items-center gap-2 justify-start"
+                >
+                  <LogOut size={16} />
+                  <span>Sign Out</span>
+                </Button>
               ) : (
                 <>
                   <Link 
