@@ -11,14 +11,13 @@ import { useAuth } from "@/hooks/useAuth";
 interface AuthFormProps {
   type: "signin" | "signup";
   onSubmit: (email: string, password: string, name?: string) => void;
+  isProcessing?: boolean;
 }
 
-const AuthForm = ({ type, onSubmit }: AuthFormProps) => {
+const AuthForm = ({ type, onSubmit, isProcessing = false }: AuthFormProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const { signIn, signUp } = useAuth();
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,31 +31,10 @@ const AuthForm = ({ type, onSubmit }: AuthFormProps) => {
       return;
     }
     
-    setIsLoading(true);
     try {
-      if (type === "signup") {
-        await signUp(email, password, name);
-        toast({
-          title: "Account Created",
-          description: "Your account has been created successfully. Please sign in.",
-        });
-      } else {
-        await signIn(email, password);
-        toast({
-          title: "Welcome back!",
-          description: "You have successfully signed in.",
-        });
-      }
       await onSubmit(email, password, type === "signup" ? name : undefined);
     } catch (error: any) {
       console.error("Auth error:", error);
-      toast({
-        title: "Authentication Error",
-        description: error.message || "An error occurred during authentication",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
     }
   };
   
@@ -80,7 +58,7 @@ const AuthForm = ({ type, onSubmit }: AuthFormProps) => {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                disabled={isLoading}
+                disabled={isProcessing}
                 required
               />
             </div>
@@ -93,7 +71,7 @@ const AuthForm = ({ type, onSubmit }: AuthFormProps) => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              disabled={isLoading}
+              disabled={isProcessing}
               required
             />
           </div>
@@ -105,15 +83,15 @@ const AuthForm = ({ type, onSubmit }: AuthFormProps) => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              disabled={isLoading}
+              disabled={isProcessing}
               required
             />
           </div>
         </CardContent>
         
         <CardFooter className="flex flex-col space-y-4">
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading 
+          <Button type="submit" className="w-full" disabled={isProcessing}>
+            {isProcessing 
               ? (type === "signin" ? "Signing In..." : "Creating Account...") 
               : (type === "signin" ? "Sign In" : "Create Account")}
           </Button>
