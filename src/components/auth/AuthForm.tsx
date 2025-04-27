@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 
 interface AuthFormProps {
   type: "signin" | "signup";
@@ -17,6 +18,7 @@ const AuthForm = ({ type, onSubmit }: AuthFormProps) => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { signIn, signUp } = useAuth();
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,13 +34,25 @@ const AuthForm = ({ type, onSubmit }: AuthFormProps) => {
     
     setIsLoading(true);
     try {
+      if (type === "signup") {
+        await signUp(email, password, name);
+        toast({
+          title: "Account Created",
+          description: "Your account has been created successfully. Please sign in.",
+        });
+      } else {
+        await signIn(email, password);
+        toast({
+          title: "Welcome back!",
+          description: "You have successfully signed in.",
+        });
+      }
       await onSubmit(email, password, type === "signup" ? name : undefined);
-    } catch (error) {
-      // This will be replaced with actual error handling
+    } catch (error: any) {
       console.error("Auth error:", error);
       toast({
         title: "Authentication Error",
-        description: "An error occurred during authentication",
+        description: error.message || "An error occurred during authentication",
         variant: "destructive",
       });
     } finally {

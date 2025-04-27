@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import MainLayout from "@/components/layout/MainLayout";
 import EventCard, { Event } from "@/components/events/EventCard";
 import EventCountdown from "@/components/events/EventCountdown";
+import { useAuth } from "@/hooks/useAuth";
 
 const registeredEvents: Event[] = [
   {
@@ -89,28 +90,16 @@ const searchedEvents: Event[] = [
 ];
 
 const DashboardPage = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [userName, setUserName] = useState("User");
-  
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        setUserName("User");
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-      }
-    };
-    
-    fetchUserInfo();
-  }, []);
+  const { profile } = useAuth();
   
   return (
     <MainLayout>
       <div className="space-y-8">
         <div className="flex justify-between items-start flex-wrap gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Welcome, {userName}</h1>
+            <h1 className="text-3xl font-bold tracking-tight">
+              Welcome, {profile?.full_name || 'User'}
+            </h1>
             <p className="text-muted-foreground mt-2">
               Discover, explore, and manage your event journey with Eventory. 
               Track your upcoming events, explore new opportunities, and stay 
@@ -123,8 +112,8 @@ const DashboardPage = () => {
             <Input
               type="text"
               placeholder="Search events..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              value=""
+              onChange={() => {}}
               className="pl-10 w-full min-w-[200px] sm:min-w-[300px]"
             />
           </div>
