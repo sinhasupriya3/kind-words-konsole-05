@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Search, Ticket, CalendarClock, MapPin, School } from "lucide-react";
@@ -91,13 +90,13 @@ const searchedEvents: Event[] = [
 
 const DashboardPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [userName, setUserName] = useState("Nandini");
+  const [userName, setUserName] = useState("User");
   
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
         await new Promise((resolve) => setTimeout(resolve, 500));
-        setUserName("Nandini");
+        setUserName("User");
       } catch (error) {
         console.error("Error fetching user info:", error);
       }
