@@ -3,13 +3,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MainLayout from "@/components/layout/MainLayout";
 import AuthForm from "@/components/auth/AuthForm";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
   const { signUp } = useAuth();
-  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   
   const handleSignUp = async (email: string, password: string, name?: string) => {

@@ -12,7 +12,6 @@ interface User {
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, name: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -80,27 +79,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
   
-  const signUp = async (email: string, password: string, name: string) => {
-    setIsLoading(true);
-    try {
-      // In a real app, this would call an API to register the user
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
-      
-      // For demo, we just simulate a successful registration
-      toast({
-        title: "Account created successfully",
-        description: "You can now log in with your new account.",
-      });
-      
-      return Promise.resolve();
-    } catch (error) {
-      console.error("Registration error:", error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
   const logout = () => {
     setIsLoading(true);
     
@@ -120,7 +98,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const authContext = {
     user,
     login,
-    signUp,
     logout,
     isAuthenticated: !!user,
     isLoading
