@@ -1,367 +1,279 @@
-
-import { useState } from "react";
-import DashboardLayout from "@/components/layouts/DashboardLayout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Search, Ticket, CalendarClock, MapPin, School } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Calendar, 
-  Ticket,
-  Users,
-  BarChart3,
-  TrendingUp,
-  ArrowUpRight,
-  Download,
-  Clock,
-  MapPin,
-  CalendarPlus
-} from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import MainLayout from "@/components/layout/MainLayout";
+import EventCard, { Event } from "@/components/events/EventCard";
+import EventCountdown from "@/components/events/EventCountdown";
+import { useAuth } from "@/hooks/useAuth";
 
-// Sample data for upcoming events
-const upcomingEvents = [
+const registeredEvents: Event[] = [
   {
     id: "1",
     title: "Tech Conference 2025",
-    date: "2025-08-15",
+    description: "Join us for the biggest tech conference of the year featuring the latest innovations and industry leaders.",
+    date: "2025-06-15",
     time: "09:00 AM - 05:00 PM",
-    location: "Convention Center, Mumbai",
-    ticketPrice: 999,
-    attendees: 250,
-    maxCapacity: 350,
-    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87"
-  },
-  {
-    id: "2",
-    title: "Design Workshop",
-    date: "2025-07-12",
-    time: "10:00 AM - 02:00 PM",
-    location: "Creative Hub, Bengaluru",
-    ticketPrice: 499,
-    attendees: 45,
-    maxCapacity: 50,
-    image: "https://images.unsplash.com/photo-1517649763962-0c623066013b"
+    location: "Bangalore International Exhibition Centre, Bengaluru",
+    category: "Technology",
+    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+    totalSeats: 500,
+    enrolledSeats: 380,
+    isRegistered: true,
+    ticketPrice: 1999,
+    venueDetails: {
+      name: "Bangalore International Exhibition Centre",
+      address: "10th Mile, Tumkur Road, Madavara, Bengaluru, Karnataka 562123",
+      facilities: ["Wi-Fi", "Parking", "Food Court", "Accessibility Features"]
+    }
   },
   {
     id: "3",
-    title: "Marketing Summit",
-    date: "2025-09-08",
-    time: "09:30 AM - 04:30 PM",
-    location: "Business Center, Delhi",
-    ticketPrice: 1299,
-    attendees: 180,
-    maxCapacity: 300,
-    image: "https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a"
-  }
+    title: "Startup Networking Event",
+    description: "Connect with founders, investors, and tech enthusiasts in this networking event.",
+    date: "2025-05-20",
+    time: "06:00 PM - 09:00 PM",
+    location: "Bombay Stock Exchange, Mumbai",
+    category: "Networking",
+    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
+    totalSeats: 200,
+    enrolledSeats: 150,
+    isRegistered: true,
+    ticketPrice: 499,
+    venueDetails: {
+      name: "Bombay Stock Exchange",
+      address: "Phiroze Jeejeebhoy Towers, Dalal Street, Mumbai, Maharashtra 400001",
+      facilities: ["Rooftop Terrace", "Conference Rooms", "Catering"]
+    }
+  },
 ];
 
-// Chart data (would be dynamic in a real app)
-const monthlyStats = {
-  events: [45, 52, 38, 60, 56, 65, 70],
-  attendees: [1200, 1350, 900, 1700, 1500, 1800, 2100],
-  revenue: [350000, 420000, 280000, 510000, 460000, 550000, 620000]
-};
+const searchedEvents: Event[] = [
+  {
+    id: "2",
+    title: "Web Development Workshop",
+    description: "A hands-on workshop for learning modern web development techniques and tools.",
+    date: "2025-07-10",
+    time: "10:00 AM - 03:00 PM",
+    location: "T-Hub, Hyderabad",
+    category: "Workshop",
+    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
+    totalSeats: 100,
+    enrolledSeats: 85,
+    ticketPrice: 799,
+    venueDetails: {
+      name: "T-Hub",
+      address: "TSIIC Phase 2, Raidurgam, Hyderabad, Telangana 500081",
+      facilities: ["High-speed Internet", "Developer Workstations", "Refreshments"]
+    }
+  },
+  {
+    id: "5",
+    title: "UX/UI Design Masterclass",
+    description: "Learn the principles of effective UX/UI design from industry experts.",
+    date: "2025-06-25",
+    time: "10:00 AM - 04:00 PM",
+    location: "Infopark, Kochi",
+    category: "Workshop",
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158",
+    totalSeats: 150,
+    enrolledSeats: 120,
+    ticketPrice: 899,
+    venueDetails: {
+      name: "Infopark",
+      address: "Infopark Kochi Campus, Kakkanad, Kochi, Kerala 682042",
+      facilities: ["Design Studios", "Discussion Areas", "Creative Spaces"]
+    }
+  },
+];
 
 const DashboardPage = () => {
-  const [timeframe, setTimeframe] = useState("weekly");
-  
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-IN', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric'
-    });
-  };
-  
-  const getCompletionPercentage = (attendees: number, capacity: number) => {
-    return Math.round((attendees / capacity) * 100);
-  };
+  const { profile } = useAuth();
   
   return (
-    <DashboardLayout>
-      <div className="space-y-6 animate-fade-in">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+    <MainLayout>
+      <div className="space-y-8">
+        <div className="flex justify-between items-start flex-wrap gap-4">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Dashboard</h1>
-            <p className="text-muted-foreground">
-              Manage your events, track performance, and analyze data.
+            <h1 className="text-3xl font-bold tracking-tight">
+              Welcome, {profile?.full_name || 'User'}
+            </h1>
+            <p className="text-muted-foreground mt-2">
+              Discover, explore, and manage your event journey with Eventory. 
+              Track your upcoming events, explore new opportunities, and stay 
+              connected with the vibrant event community.
             </p>
           </div>
           
-          <div className="flex gap-2">
-            <Button>
-              <CalendarPlus className="mr-2 h-4 w-4" />
-              Create Event
-            </Button>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
+            <Input
+              type="text"
+              placeholder="Search events..."
+              value=""
+              onChange={() => {}}
+              className="pl-10 w-full min-w-[200px] sm:min-w-[300px]"
+            />
           </div>
         </div>
         
-        {/* Overview Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card className="stats-card">
-            <CardContent className="p-6">
-              <div className="stats-icon bg-[#EEF2FF] text-eventory-primary">
-                <Calendar className="h-5 w-5" />
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Link to="/events">
+            <Button variant="outline" className="w-full h-auto py-3 justify-start card-gradient">
+              <CalendarClock className="mr-2 h-5 w-5" />
+              Browse Events
+            </Button>
+          </Link>
+          <Link to="/my-tickets">
+            <Button variant="outline" className="w-full h-auto py-3 justify-start card-gradient">
+              <Ticket className="mr-2 h-5 w-5" />
+              My Tickets
+            </Button>
+          </Link>
+          <Link to="/venues">
+            <Button variant="outline" className="w-full h-auto py-3 justify-start card-gradient">
+              <MapPin className="mr-2 h-5 w-5" />
+              Explore Venues
+            </Button>
+          </Link>
+          <Link to="/college-events">
+            <Button variant="outline" className="w-full h-auto py-3 justify-start card-gradient">
+              <School className="mr-2 h-5 w-5" />
+              College Events
+            </Button>
+          </Link>
+        </div>
+        
+        <div>
+          <h2 className="section-title mb-6">Upcoming Events</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {registeredEvents.map((event) => (
+              <EventCountdown 
+                key={event.id} 
+                targetDate={event.date} 
+                eventTitle={event.title}
+              />
+            ))}
+          </div>
+        </div>
+        
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="section-title">Your Registered Events</h2>
+            <Link to="/events">
+              <Button variant="outline" size="sm">
+                Browse More Events
+              </Button>
+            </Link>
+          </div>
+          
+          {registeredEvents.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {registeredEvents.map((event) => (
+                <EventCard 
+                  key={event.id} 
+                  event={event} 
+                  isUserDashboard={true}
+                />
+              ))}
+            </div>
+          ) : (
+            <Card>
+              <CardContent className="py-10 text-center">
+                <p className="text-muted-foreground mb-4">
+                  You haven't registered for any events yet.
+                </p>
+                <Link to="/events">
+                  <Button>Browse Events</Button>
+                </Link>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+        
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="section-title">Recently Viewed Events</h2>
+          </div>
+          
+          {searchedEvents.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {searchedEvents.map((event) => (
+                <EventCard 
+                  key={event.id} 
+                  event={event}
+                  isUserDashboard={true} 
+                />
+              ))}
+            </div>
+          ) : (
+            <Card>
+              <CardContent className="py-10 text-center">
+                <p className="text-muted-foreground">
+                  No recently viewed events.
+                </p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <Card className="card-gradient">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">
+                Registered Events
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {registeredEvents.length}
               </div>
-              <div className="stats-value">28</div>
-              <div className="stats-label">Total Events</div>
+              <p className="text-xs text-muted-foreground mt-2">
+                {registeredEvents.length === 0 ? 
+                  "No events registered" : 
+                  registeredEvents.length === 1 ? 
+                    "1 event registered" : 
+                    `${registeredEvents.length} events registered`}
+              </p>
             </CardContent>
           </Card>
           
-          <Card className="stats-card">
-            <CardContent className="p-6">
-              <div className="stats-icon bg-[#FFF4ED] text-eventory-accent">
-                <Ticket className="h-5 w-5" />
+          <Card className="card-gradient">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">
+                Upcoming Events
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {registeredEvents.filter(e => new Date(e.date) > new Date()).length}
               </div>
-              <div className="stats-value">864</div>
-              <div className="stats-label">Tickets Sold</div>
+              <p className="text-xs text-muted-foreground mt-2">
+                In the next 30 days
+              </p>
             </CardContent>
           </Card>
           
-          <Card className="stats-card">
-            <CardContent className="p-6">
-              <div className="stats-icon bg-[#F0F9FF] text-eventory-tertiary">
-                <Users className="h-5 w-5" />
+          <Card className="card-gradient">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">
+                Past Events
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {registeredEvents.filter(e => new Date(e.date) < new Date()).length}
               </div>
-              <div className="stats-value">5.2k</div>
-              <div className="stats-label">Total Attendees</div>
-            </CardContent>
-          </Card>
-          
-          <Card className="stats-card">
-            <CardContent className="p-6">
-              <div className="stats-icon bg-[#FFF1F0] text-eventory-secondary">
-                <BarChart3 className="h-5 w-5" />
-              </div>
-              <div className="stats-value">₹2.4M</div>
-              <div className="stats-label">Revenue</div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Events you've attended
+              </p>
             </CardContent>
           </Card>
         </div>
-        
-        {/* Analytics Section */}
-        <Card className="app-card">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <div className="space-y-1">
-              <CardTitle>Performance Analytics</CardTitle>
-              <CardDescription>
-                Track event performance and metrics over time
-              </CardDescription>
-            </div>
-            <Select
-              value={timeframe}
-              onValueChange={setTimeframe}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select timeframe" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="weekly">Last 7 days</SelectItem>
-                <SelectItem value="monthly">Last 30 days</SelectItem>
-                <SelectItem value="quarterly">Last 90 days</SelectItem>
-                <SelectItem value="yearly">Last 12 months</SelectItem>
-              </SelectContent>
-            </Select>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="events">
-              <div className="flex justify-between items-center mb-4">
-                <TabsList>
-                  <TabsTrigger value="events">Events</TabsTrigger>
-                  <TabsTrigger value="attendees">Attendees</TabsTrigger>
-                  <TabsTrigger value="revenue">Revenue</TabsTrigger>
-                </TabsList>
-                <Button variant="outline" size="sm">
-                  <Download className="mr-2 h-4 w-4" />
-                  Export
-                </Button>
-              </div>
-
-              <TabsContent value="events" className="space-y-4">
-                {/* In a real app, this would be a chart component */}
-                <div className="h-[300px] flex flex-col justify-center items-center bg-muted/20 rounded-lg border border-dashed">
-                  <BarChart3 className="h-16 w-16 text-muted-foreground mb-2" />
-                  <p className="text-center text-muted-foreground">
-                    Event growth chart would display here
-                  </p>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="text-sm text-muted-foreground">Events This Month</div>
-                      <div className="text-2xl font-bold flex items-center gap-2">
-                        12
-                        <span className="text-sm text-green-500 font-normal flex items-center">
-                          <TrendingUp className="h-3 w-3 mr-1" />
-                          +18%
-                        </span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="text-sm text-muted-foreground">Avg. Attendance Rate</div>
-                      <div className="text-2xl font-bold">78%</div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="text-sm text-muted-foreground">Most Popular Type</div>
-                      <div className="text-2xl font-bold">Workshop</div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="text-sm text-muted-foreground">Completion Rate</div>
-                      <div className="text-2xl font-bold flex items-center gap-2">
-                        92%
-                        <span className="text-sm text-green-500 font-normal flex items-center">
-                          <ArrowUpRight className="h-3 w-3 mr-1" />
-                          +5%
-                        </span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="attendees" className="space-y-4">
-                {/* Attendee charts would go here */}
-                <div className="h-[300px] flex flex-col justify-center items-center bg-muted/20 rounded-lg border border-dashed">
-                  <Users className="h-16 w-16 text-muted-foreground mb-2" />
-                  <p className="text-center text-muted-foreground">
-                    Attendee growth chart would display here
-                  </p>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="revenue" className="space-y-4">
-                {/* Revenue charts would go here */}
-                <div className="h-[300px] flex flex-col justify-center items-center bg-muted/20 rounded-lg border border-dashed">
-                  <TrendingUp className="h-16 w-16 text-muted-foreground mb-2" />
-                  <p className="text-center text-muted-foreground">
-                    Revenue growth chart would display here
-                  </p>
-                </div>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
-        
-        {/* Upcoming Events */}
-        <Card className="app-card overflow-hidden">
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Upcoming Events</CardTitle>
-                <CardDescription>Events scheduled for the coming weeks</CardDescription>
-              </div>
-              <Button variant="outline" size="sm">View All</Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              {upcomingEvents.map(event => (
-                <Card key={event.id} className="overflow-hidden">
-                  <div 
-                    className="h-32 bg-cover bg-center" 
-                    style={{ backgroundImage: `url(${event.image})` }}
-                  ></div>
-                  <CardContent className="p-4">
-                    <h3 className="font-semibold text-lg line-clamp-1">{event.title}</h3>
-                    <div className="grid grid-cols-[16px_1fr] gap-x-2 gap-y-1 mt-2 text-sm">
-                      <Calendar className="h-4 w-4 text-muted-foreground" />
-                      <span>{formatDate(event.date)}</span>
-                      <Clock className="h-4 w-4 text-muted-foreground" />
-                      <span>{event.time}</span>
-                      <MapPin className="h-4 w-4 text-muted-foreground" />
-                      <span className="truncate">{event.location}</span>
-                    </div>
-                    
-                    <div className="mt-4">
-                      <div className="flex justify-between text-sm mb-1">
-                        <span>Attendance</span>
-                        <span>{event.attendees}/{event.maxCapacity}</span>
-                      </div>
-                      <div className="w-full h-2 bg-gray-100 rounded-full">
-                        <div 
-                          className="h-2 bg-eventory-primary rounded-full" 
-                          style={{ width: `${getCompletionPercentage(event.attendees, event.maxCapacity)}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-        
-        {/* Features Box */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Advanced Cloud Features</CardTitle>
-            <CardDescription>
-              Scale your events with our enterprise-grade cloud infrastructure
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Users className="h-5 w-5 text-eventory-primary" />
-                    Hybrid Events
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">
-                    Seamlessly manage in-person and virtual attendees with our hybrid event tools. 
-                    Includes live streaming integration and virtual networking rooms.
-                  </p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <TrendingUp className="h-5 w-5 text-eventory-accent" />
-                    Auto-scaling Storage
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">
-                    Our cloud infrastructure automatically scales as your event grows. 
-                    Never worry about storage limits for event materials, recordings, or attendee data.
-                  </p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <ArrowUpRight className="h-5 w-5 text-eventory-secondary" />
-                    Live Updates
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">
-                    Push real-time updates to all attendees instantly. Keep everyone informed about schedule
-                    changes, venue updates, or important announcements.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          </CardContent>
-        </Card>
       </div>
-    </DashboardLayout>
+    </MainLayout>
   );
 };
 
