@@ -1,9 +1,9 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import RequireAuth from "@/components/auth/RequireAuth";
 
 // Import all page components
 import HomePage from "./pages/HomePage";
@@ -24,16 +24,6 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-  
-  if (!isLoggedIn) {
-    return <Navigate to="/signin" />;
-  }
-  
-  return <>{children}</>;
-};
-
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -44,32 +34,39 @@ const App = () => (
           <Route path="/" element={<HomePage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/events/:id" element={<EventDetailPage />} />
-          <Route path="/tickets" element={<TicketsPage />} />
+          <Route 
+            path="/tickets" 
+            element={
+              <RequireAuth>
+                <TicketsPage />
+              </RequireAuth>
+            } 
+          />
           <Route path="/venues" element={<VenuesPage />} />
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route 
             path="/dashboard" 
             element={
-              <ProtectedRoute>
+              <RequireAuth>
                 <DashboardPage />
-              </ProtectedRoute>
+              </RequireAuth>
             } 
           />
           <Route 
             path="/college-events" 
             element={
-              <ProtectedRoute>
+              <RequireAuth>
                 <CollegeEventsPage />
-              </ProtectedRoute>
+              </RequireAuth>
             } 
           />
           <Route 
             path="/my-tickets" 
             element={
-              <ProtectedRoute>
+              <RequireAuth>
                 <MyTicketsPage />
-              </ProtectedRoute>
+              </RequireAuth>
             } 
           />
           <Route path="/contact" element={<ContactPage />} />
