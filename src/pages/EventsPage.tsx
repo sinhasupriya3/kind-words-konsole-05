@@ -1,45 +1,23 @@
 
-import { useState, useEffect } from "react";
-import MainLayout from "@/components/layout/MainLayout";
-import EventsList from "@/components/events/EventsList";
-import { mockEvents } from "@/data/mockEvents";
+import SystemStatus from "@/components/dashboard/SystemStatus";
+import CollegeEventsList from "@/components/college-events/CollegeEventsList";
 
 const EventsPage = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  
-  useEffect(() => {
-    // Simulate API call with a delay
-    const fetchEvents = async () => {
-      try {
-        // This will be replaced with actual API call
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      } catch (error) {
-        console.error("Error fetching events:", error);
-        // Handle error appropriately
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    fetchEvents();
-  }, []);
-  
   return (
-    <MainLayout>
-      <div className="space-y-8">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Browse Events</h1>
-          <p className="text-muted-foreground mt-2">
-            Discover and register for exciting events in your area
-          </p>
-        </div>
-        
-        <EventsList 
-          events={mockEvents} 
-          isLoading={isLoading} 
-        />
+    <div className="container mx-auto px-4 py-6 space-y-6">
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold mb-2">Cloud-Based Event Management</h1>
+        <p className="text-muted-foreground">
+          Manage and monitor your events with real-time cloud synchronization
+        </p>
       </div>
-    </MainLayout>
+      
+      <SystemStatus />
+      
+      <div className="mt-8">
+        <CollegeEventsList />
+      </div>
+    </div>
   );
 };
 
